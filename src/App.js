@@ -3,9 +3,11 @@ import { useState } from 'react';
 
 
 const App = () => {
+
   const [displayValue, setDisplayValue] = useState("")
   const [operation, setOperation] = useState({ operand1: "", operator: null, operand2: "" })
   const [results, setResults] = useState("")
+
   console.log("results", results)
   console.log("operation", operation)
   const selectOperator = (operator) => {
@@ -74,7 +76,27 @@ const App = () => {
         setDisplayValue(operation.operand1 * -1)
       }
     }
-
+    else if (event.target.value === '0') {
+      if (results !== "") {
+        setResults("")
+        setOperation({ operand1: "", operator: null, operand2: "" })
+        selectOperand1(event.target.value)
+        setDisplayValue("")
+      }
+      else if (operation.operand1 === "") {
+        setDisplayValue("")
+      }
+      else {
+        if (operation.operand2) {
+          setOperation((prevOperation => ({ ...prevOperation, operand2: prevOperation.operand2 + event.target.value })))
+          setDisplayValue(operation.operand2 + event.target.value)
+        }
+        else {
+          setOperation((prevOperation => ({ ...prevOperation, operand1: prevOperation.operand1 + event.target.value })))
+          setDisplayValue(operation.operand1 + event.target.value)
+        }
+      }
+    }
     else {
       if (results !== "") {
         setResults("")
