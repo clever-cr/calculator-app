@@ -1,8 +1,12 @@
 import Button from "./components/Button";
-import { useState } from 'react'
+import { useState } from 'react';
+
+
 const App = () => {
   const [displayValue, setDisplayValue] = useState("")
   const [operation, setOperation] = useState({ operand1: "", operator: null, operand2: "" })
+  const [results, setResults] = useState("")
+  console.log("results", results)
   console.log("operation", operation)
   const selectOperator = (operator) => {
     setOperation(prevOperation => ({ ...prevOperation, operator: operator }))
@@ -23,6 +27,7 @@ const App = () => {
 
   const handleClick = (event) => {
     if (event.target.value === "=") {
+      setResults(calculate(+operation.operand1, +operation.operand2, operation.operator))
       setDisplayValue(calculate(+operation.operand1, +operation.operand2, operation.operator))
     }
 
@@ -31,11 +36,16 @@ const App = () => {
     }
 
     else if (event.target.value === 'AC') {
-      if (operation.operand1 && operation.operator) {
+      if (results !== "") {
+        setResults("");
+        setOperation({ operand1: "", operator: null, operand2: "" });
+        setDisplayValue("")
+      }
+      else if (operation.operand1 && operation.operator) {
         setOperation(prevOperation => ({ ...prevOperation, operand2: "" }))
         setDisplayValue("")
       }
-      else if (operation.operand1) {
+      else {
         setOperation(prevOperation => ({ ...prevOperation, operand1: '' }))
         setDisplayValue("")
       }
@@ -66,7 +76,13 @@ const App = () => {
     }
 
     else {
-      if (operation.operand1 && operation.operator) {
+      if (results !== "") {
+        setResults("")
+        setOperation({ operand1: "", operator: null, operand2: "" })
+        selectOperand1(event.target.value)
+        setDisplayValue("")
+      }
+      else if (operation.operand1 && operation.operator) {
         selectOperand2(event.target.value)
 
       }
@@ -101,22 +117,22 @@ const App = () => {
         <Button value='AC' handleClick={handleClick} />
         <Button value='+/-' handleClick={handleClick} />
         <Button value='%' handleClick={handleClick} />
-        <Button value='/' style={"bg-orange-500"} handleClick={handleClick} />
+        <Button value='/' style={`${"bg-orange-500"}`} handleClick={handleClick} />
         <Button value='7' handleClick={handleClick} />
         <Button value='8' handleClick={handleClick} />
         <Button value='9' name='number' handleClick={handleClick} />
-        <Button value='*' style={"bg-orange-500"} handleClick={handleClick} />
+        <Button value='*' style={`${"bg-orange-500"}`} handleClick={handleClick} />
         <Button value='4' handleClick={handleClick} />
         <Button value='5' handleClick={handleClick} />
         <Button value='6' handleClick={handleClick} />
-        <Button value='-' style={"bg-orange-500"} handleClick={handleClick} />
+        <Button value='-' style={`${"bg-orange-500"}`} handleClick={handleClick} />
         <Button value='1' handleClick={handleClick} />
         <Button value='2' handleClick={handleClick} />
         <Button value='3' handleClick={handleClick} />
-        <Button value='+' style={"bg-orange-500"} handleClick={handleClick} />
-        <Button style={"col-span-2"} value='0' handleClick={handleClick} />
+        <Button value='+' style={`${"bg-orange-500"}`} handleClick={handleClick} />
+        <Button style={`${'col-span-2'}`} value='0' handleClick={handleClick} />
         <Button value='.' handleClick={handleClick} />
-        <Button value='=' style={"bg-orange-500"} handleClick={handleClick} />
+        <Button value='=' style={`${"bg-orange-500"}`} handleClick={handleClick} />
 
       </div>
 
