@@ -3,8 +3,8 @@ import { useState } from 'react';
 
 
 const App = () => {
-  const values = ["AC", "+/-", "%", "/", "7", "8", "9", "*", "4", "5", "6", "-", "1", "2", "3", "+", "0", ".", "="]
-
+  const values = ["AC", "+/-", "%", "7", "8", "9", "4", "5", "6", "1", "2", "3", "0", ".",]
+  const operators = ["/", "*", "-", "+", "="]
   const [displayValue, setDisplayValue] = useState("")
 
   const [operation, setOperation] = useState({ operand1: "", operator: null, operand2: "" })
@@ -16,13 +16,13 @@ const App = () => {
     setDisplayValue("")
   }
 
-  const selectOperand1 = (operand1) => { setOperation(prevOperation => ({ ...prevOperation, operand1: prevOperation.operand1 + operand1 })) }
+  const selectOperand1 = (operand1) => setOperation(prevOperation => ({ ...prevOperation, operand1: prevOperation.operand1 + operand1 }))
 
-  const selectOperand2 = (operand2) => { setOperation(prevOperation => ({ ...prevOperation, operand2: prevOperation.operand2 + operand2 })) }
+  const selectOperand2 = (operand2) => setOperation(prevOperation => ({ ...prevOperation, operand2: prevOperation.operand2 + operand2 }))
 
-  const handleChange = (newNumber) => { setDisplayValue(prevValue => prevValue + newNumber) }
+  const handleChange = (newNumber) => setDisplayValue(prevValue => prevValue + newNumber)
 
-  const handleCalculate = () => { return calculate(+operation.operand1, +operation.operand2, operation.operator) }
+  const handleCalculate = () => calculate(+operation.operand1, +operation.operand2, operation.operator)
 
   const clear = () => {
     setResults("")
@@ -31,8 +31,8 @@ const App = () => {
 
   const handleClick = (event) => {
     if (event.target.value === "=") {
-      setResults(handleCalculate)
-      setDisplayValue(handleCalculate)
+      setResults(handleCalculate())
+      setDisplayValue(handleCalculate())
     }
 
     else if (["+", "-", "*", "/"].includes(event.target.value)) selectOperator(event.target.value)
@@ -48,7 +48,7 @@ const App = () => {
         setDisplayValue("")
       }
       else {
-        setOperation(prevOperation => ({ ...prevOperation, operand1: '' }))
+        setOperation(prevOperation => ({ ...prevOperation, operand1: "" }))
         setDisplayValue("")
       }
 
@@ -77,7 +77,7 @@ const App = () => {
       }
     }
 
-    else if (event.target.value === '0') {
+    else if (event.target.value === "0") {
       if (results !== "") {
         clear()
         setOperation({ operand1: "", operator: null, operand2: "" })
@@ -130,13 +130,23 @@ const App = () => {
 
   return (
     <div className="w-[300px] m-32">
-      <input onChange={handleChange} placeholder="" value={displayValue} name="number" className="w-[300px] outline-none bg-gray-600 p-5 text-right placeholder:text-right placeholder:text-white  text-white" />
-      <div className="grid grid-cols-4">
-        {values.map((item, index) => {
-          return (
-            <Button key={index} value={item} handleClick={handleClick} style={`${index === 3 || index === 7 || index === 11 || index === 15 || index === 18 ? "bg-orange-500" : ""} ${index === 16 ? "col-span-2" : ""}`} />
-          )
-        })}
+      <input onChange={handleChange} placeholder="" value={displayValue} name="number" className="w-full outline-none bg-gray-600 p-5 text-right placeholder:text-right placeholder:text-white  text-white" />
+      <div className="grid grid-cols-3">
+        <div className="grid grid-cols-3 col-span-2">
+          {values.map((item, index) => {
+            return (
+              <Button key={index} value={item} handleClick={handleClick} style={`${index === 12 ? "col-span-2" : ""}`} />
+            )
+          })}
+        </div>
+        <div className="grid">
+          {operators.map((operator) => {
+            return (
+              <Button value={operator} handleClick={handleClick} style={`bg-orange-500`} />
+            )
+          })}
+        </div>
+
       </div>
     </div>
   )
